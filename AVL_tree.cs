@@ -1,6 +1,6 @@
 ﻿/**
  *  This implements the basic function of AVL Tree. 
- *  It supports search, insert and delection operation.
+ *  It supports search, insert and delect operation.
  *  @author Davin-Yu
  */
 
