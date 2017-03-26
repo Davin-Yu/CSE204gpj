@@ -1,5 +1,6 @@
 ﻿/**
- *  This implements the basic function of AVL Tree.
+ *  This implements the basic function of AVL Tree. 
+ *  It supports search, insert and delection operation.
  *  @author Davin-Yu
  */
 
@@ -74,6 +75,9 @@ namespace AVL_Tree_script
         }
 
         public void printAll(Node x) {
+            if (x == null) {
+                return;
+            }
             if (x != null) {
                 System.Console.Write("Node:" + x.getValue() + " ");
                 System.Console.Write("Height:" + x.getHeight() + " ");
@@ -96,6 +100,22 @@ namespace AVL_Tree_script
             if (x.getRightChild() != null) {
                 printAll(x.getRightChild());
             }
+        }
+
+        public void deleteNodeTo(Node temp, Node _to) {
+            Node tempf = temp.getParent();
+            if (tempf != null) {
+                if (temp.getValue() < tempf.getValue()) {
+                    tempf.setLeftChild(_to);
+                }
+                else {
+                    tempf.setRightChild(_to);
+                }
+            }
+            if (_to != null) {
+                _to.setParent(tempf);
+            }
+            temp.setParent(null);
         }
 
         public int getLeftSonHeight(Node x) {
@@ -167,6 +187,10 @@ namespace AVL_Tree_script
 
         public void HeightRenew(Node temp) {
             Node parent;
+            if (temp == null) {
+                root = null;
+                return;
+            }
             while (temp.getParent() != null) {
                 parent = temp.getParent();
                 int leftHeight;
@@ -192,7 +216,7 @@ namespace AVL_Tree_script
                     temp = temp.getParent();
                 }
             }
-            root = temp;
+            this.root = temp;
         }
 
         public void restructure(Node ubNode) {
@@ -306,15 +330,36 @@ namespace AVL_Tree_script
             } else {
                 Node tempParent = temp.getParent();
                 if ((temp.getLeftChild() == null) && (temp.getRightChild() == null)) {
-                    temp = null;
+                    Node tempf = temp.getParent();
+                    deleteNodeTo(temp, null);
+                    if (tempf !=null) {
+                        tempf.setHeight(sonMaxHeight(tempf) + 1);
+                    }
+                    HeightRenew(tempf);
                 } else if ((temp.getLeftChild() != null) && (temp.getRightChild() == null)) {
-                    temp = temp.getLeftChild();
-                    HeightRenew(temp);
+                    deleteNodeTo(temp, temp.getLeftChild());
+                    HeightRenew(temp.getLeftChild());
                 } else if ((temp.getLeftChild() == null) && (temp.getRightChild() != null)) {
-                    temp = temp.getRightChild();
-                    HeightRenew(temp);
+                    deleteNodeTo(temp, temp.getRightChild());
+                    HeightRenew(temp.getRightChild());
                 } else {
-                    Node inorderNode = temp;
+                    Node inorderNode = temp.getRightChild();
+                    while (inorderNode.getLeftChild() != null) {
+                        inorderNode = inorderNode.getLeftChild();
+                    }
+                    int tempValue = temp.getValue();
+                    temp.setValue(inorderNode.getValue());
+                    if (inorderNode.getRightChild() != null) {
+                        deleteNodeTo(temp, temp.getRightChild());
+                        HeightRenew(temp.getRightChild());
+                    } else {
+                        Node tempf = inorderNode.getParent();
+                        deleteNodeTo(inorderNode, null);
+                        if (tempf != null) {
+                            tempf.setHeight(sonMaxHeight(tempf) + 1);
+                        }
+                        HeightRenew(tempf);
+                    }
                 }
             }
             return true;
@@ -326,9 +371,28 @@ namespace AVL_Tree_script
         {
             AVL_Tree avl = new AVL_Tree();
             while (true) {
+                System.Console.WriteLine("Please input 'insert', 'search', or 'delete': ");
+                string command = Console.ReadLine();
+                System.Console.WriteLine("Please input number: ");
                 int newvalue = Convert.ToInt32(Console.ReadLine());
-                avl.insert(newvalue);
-                avl.printAll(avl.root);
+                if (command.Equals("insert")) {
+                    avl.insert(newvalue);
+                    avl.printAll(avl.root);
+                } else if (command.Equals("search")) {
+                    if (avl.search(newvalue) != null) {
+                        System.Console.WriteLine("Found");
+                    }else {
+                        System.Console.WriteLine("Not Found");
+                    }
+                } else if (command.Equals("delete")) {
+                    if (avl.delete(newvalue)) {
+                        avl.printAll(avl.root);
+                    } else {
+                        System.Console.WriteLine("No Found");
+                    }
+                } else {
+                    System.Console.WriteLine("invalid input");
+                }
             }
         }
     }
