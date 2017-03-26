@@ -247,6 +247,7 @@ namespace AVL_Tree_script
         public bool insert(int v) {
             if (root == null) {
                 root = new Node(v, null);
+                return true;
             }else {
                 Node temp = root;
                 bool found = false;
@@ -277,12 +278,46 @@ namespace AVL_Tree_script
                 HeightRenew(temp);
                 return true;
             }
-            return false;
+        }
+
+        public Node search(int v) {
+            if (root == null) {
+                return null;
+            } else {
+                Node temp = root;
+                bool found = false;
+                while ((temp != null) && (!found)) {
+                    if (v == temp.getValue()) {
+                        found = true;
+                    }else if (v < temp.getValue()) {
+                        temp = temp.getLeftChild();
+                    }else {
+                        temp = temp.getRightChild();
+                    }
+                }
+                return temp;
+            }
         }
 
         public bool delete(int v) {
-
-            return false;
+            Node temp = search(v);
+            if (search(v) == null) {
+                return false;
+            } else {
+                Node tempParent = temp.getParent();
+                if ((temp.getLeftChild() == null) && (temp.getRightChild() == null)) {
+                    temp = null;
+                } else if ((temp.getLeftChild() != null) && (temp.getRightChild() == null)) {
+                    temp = temp.getLeftChild();
+                    HeightRenew(temp);
+                } else if ((temp.getLeftChild() == null) && (temp.getRightChild() != null)) {
+                    temp = temp.getRightChild();
+                    HeightRenew(temp);
+                } else {
+                    Node inorderNode = temp;
+                }
+            }
+            return true;
         }
     }
 
