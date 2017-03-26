@@ -1,6 +1,11 @@
 ﻿/**
- *  This implements the basic function of AVL Tree. 
- *  It supports search, insert and delect operation.
+ *  This program implements AVL Tree Data Structure.
+ *  The AVL Tree supports search, insert and delete operation.
+ *  <p>
+ *  People who read this code should first be familiar with AVL_Tree and its multiplication.
+ *  Such as search, insert, delete, right rotation, left rotation and restructure.
+ *  Copyright 2017 Davin Yu
+ *
  *  @author Davin-Yu
  */
 
@@ -8,7 +13,12 @@ using System;
 
 namespace AVL_Tree_script
 {
-    /* Node Structure */
+    /**
+     *  This class implements the Node in a Tree structrue. Each node contains
+     *  the information of its parent, leftchild, rightchild, with its own value
+     *  and height. It also allow this information to be set or gotten.
+     *  This class acts as support class for {@link AVL_Tree}
+     */
     public class Node
     {
         private Node parent;
@@ -66,7 +76,9 @@ namespace AVL_Tree_script
         }
     }
 
-    /* AVL_Tree */
+    /**
+     *  This class implements an AVL_Tree which allows searching, inserting, deleting.
+     */
     public class AVL_Tree
     {
         public Node root;
@@ -74,6 +86,14 @@ namespace AVL_Tree_script
             root = null;
         }
 
+        /**
+         *  Print all Nodes with their own information in the AVL_Tree.
+         *  It recursively print all Nodes in the AVL_Tree in Depth First Search
+         *  resluting order. It provides information like Node value, Node height,
+         *  parent, children.
+         *
+         *  @param x  The Node is currently under printing.
+         */
         public void printAll(Node x) {
             if (x == null) {
                 return;
@@ -102,6 +122,11 @@ namespace AVL_Tree_script
             }
         }
 
+        /**
+         *  Deletion one Node to by replcing with another Node if exsits
+         *  @param  temp  the Node which will be deleted
+         *  @param  _to   the Node which will replace the deleted Node
+         */
         public void deleteNodeTo(Node temp, Node _to) {
             Node tempf = temp.getParent();
             if (tempf != null) {
@@ -135,6 +160,11 @@ namespace AVL_Tree_script
             }
         }
 
+        /**
+         *  Compare the height of a Node's two children and get the higher number.
+         *  @param  x The parent Node which contains two children to be compared.
+         *  @return the max_height of a node's two children
+         */
         public int sonMaxHeight(Node x) {
             int maxHeight = 0;
             if (x.getRightChild() != null) {
@@ -146,8 +176,7 @@ namespace AVL_Tree_script
             return maxHeight;
         }
 
-        public void setNewHeight(Node tempRoot)
-        {
+        public void setNewHeight(Node tempRoot) {
             tempRoot.getLeftChild().setHeight(sonMaxHeight(tempRoot.getLeftChild()) + 1);
             tempRoot.getRightChild().setHeight(sonMaxHeight(tempRoot.getRightChild()) + 1);
             tempRoot.setHeight(sonMaxHeight(tempRoot));
@@ -371,9 +400,9 @@ namespace AVL_Tree_script
         {
             AVL_Tree avl = new AVL_Tree();
             while (true) {
-                System.Console.WriteLine("Please input 'insert', 'search', or 'delete': ");
+                System.Console.Write("Please input 'insert', 'search', or 'delete': ");
                 string command = Console.ReadLine();
-                System.Console.WriteLine("Please input number: ");
+                System.Console.Write("Please input number: ");
                 int newvalue = Convert.ToInt32(Console.ReadLine());
                 if (command.Equals("insert")) {
                     avl.insert(newvalue);
