@@ -182,6 +182,11 @@ namespace AVL_Tree_script
             tempRoot.setHeight(sonMaxHeight(tempRoot));
         }
 
+        /**
+         *  Rotate the tree to the right.
+         *  @param  _root the root which will be the child
+         *  @param  _povit the povit which will be the parent
+         */
         public void RightRotate(Node _root, Node _povit) {
             Node p = _root.getParent();
             _root.setLeftChild(_povit.getRightChild());
@@ -198,6 +203,11 @@ namespace AVL_Tree_script
             _povit.setParent(p);
         }
 
+        /**
+         *  Rotate the tree to the left.
+         *  @param  _root the root which will be the child
+         *  @param  _povit the povit which will be the parent
+         */
         public void LeftRotate(Node _povit, Node _root) {
             Node p = _root.getParent();
             _root.setRightChild(_povit.getLeftChild());
@@ -214,6 +224,13 @@ namespace AVL_Tree_script
             _povit.setParent(p);
         }
 
+        /**
+         *  Renew the height of the tree after the multiplication. The will be done
+         *  to all the ancestors of the node which is inserted or deleted. It will
+         *  also check if the tree need to be restructed. If needed, it will be
+         *  restructed through {@link restructure} method.
+         *  @param  temp  the node which is needed for renewing its ancestors
+         */
         public void HeightRenew(Node temp) {
             Node parent;
             if (temp == null) {
@@ -248,6 +265,10 @@ namespace AVL_Tree_script
             this.root = temp;
         }
 
+        /**
+         *  Restruct the Nodes based on the condition (4 cases).
+         *  @param  ubNode  the unbalanced node which needs to be restructed.
+         */
         public void restructure(Node ubNode) {
             int ubNoderighth, ubNodelefth;
             ubNoderighth = getRightSonHeight(ubNode);
@@ -297,6 +318,10 @@ namespace AVL_Tree_script
             HeightRenew(ubNode);
         }
 
+        /**
+         *  Insert the value to the AVL_Tree.
+         *  @param  v  the valued to be inserted.
+         */
         public bool insert(int v) {
             if (root == null) {
                 root = new Node(v, null);
@@ -333,6 +358,13 @@ namespace AVL_Tree_script
             }
         }
 
+        /**
+         *  Search the value in the AVL_Tree. It will return if the searched node
+         *  exsits or not.
+         *  @param  v  the value to be deleted in AVL_Tree
+         *  @return The founded Node will be returned. And return <code> null </code>
+         *          if not exists.
+         */
         public Node search(int v) {
             if (root == null) {
                 return null;
@@ -352,6 +384,12 @@ namespace AVL_Tree_script
             }
         }
 
+        /**
+         *  Deleted the value in the AVL_Tree. It is basically divided into
+         *  three conditions.
+         *  @param  v  the value which will be deleted.
+         *  @return    if successfully deleted, return <code> ture </code>.
+         */
         public bool delete(int v) {
             Node temp = search(v);
             if (search(v) == null) {
