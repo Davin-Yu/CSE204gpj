@@ -128,9 +128,11 @@ namespace AVL_Tree_script
          *  @param  _to   the Node which will replace the deleted Node
          */
         public void deleteNodeTo(Node temp, Node _to) {
-            Node tempf = temp.getParent();
+            //在这个过程中, temp是会被删除的点, 最后他会被设成Null！！！！
+            Node tempf = temp.getParent();  //得到被删除点的父亲
             if (tempf != null) {
-                if (temp.getValue() < tempf.getValue()) {
+                // 以下的if-else语句把被删除点(temp)变成替代的点(_to)
+                if (temp.getValue() < tempf.getValue()) {   
                     tempf.setLeftChild(_to);
                 }
                 else {
@@ -140,7 +142,8 @@ namespace AVL_Tree_script
             if (_to != null) {
                 _to.setParent(tempf);
             }
-            temp.setParent(null);
+            // 以上步骤确保了temp的儿子_to已经全部转移给temp的父亲
+            temp.setParent(null);   //断开temp和父亲的联系。 图像应该在这一步显示temp消失！！！！
         }
 
         public int getLeftSonHeight(Node x) {
@@ -226,9 +229,9 @@ namespace AVL_Tree_script
 
         /**
          *  Renew the height of the tree after the multiplication. The will be done
-         *  to all the ancestors of the node which is inserted or deleted. It will
-         *  also check if the tree need to be restructed. If needed, it will be
-         *  restructed through {@link restructure} method.
+         *  to all the ancestors of the node (not include itself) which is inserted 
+         *  or deleted. It will also check if the tree need to be restructed. 
+         *  If needed, it will be restructed through {@link restructure} method.
          *  @param  temp  the node which is needed for renewing its ancestors
          */
         public void HeightRenew(Node temp) {
@@ -391,20 +394,28 @@ namespace AVL_Tree_script
          *  @return    if successfully deleted, return <code> ture </code>.
          */
         public bool delete(int v) {
-            Node temp = search(v);
+            Node temp = search(v);  //temp这个点就是要删除的这个点
             if (search(v) == null) {
                 return false;
             } else {
                 Node tempParent = temp.getParent();
                 if ((temp.getLeftChild() == null) && (temp.getRightChild() == null)) {
-                    Node tempf = temp.getParent();
-                    deleteNodeTo(temp, null);
+                    // 要删除的点左右都没孩子的情况
+                    Node tempf = temp.getParent(); 
+                    deleteNodeTo(temp, null); //这一步把要删除的点变成null
                     if (tempf !=null) {
-                        tempf.setHeight(sonMaxHeight(tempf) + 1);
+                        tempf.setHeight(sonMaxHeight(tempf) + 1);  // 设置删除点父亲的高度
                     }
-                    HeightRenew(tempf);
+                    if (tempf.getLeftChild() != null) {
+                        HeightRenew(tempf.getLeftChild());
+                    } else if (tempf.getRightChild() != null) {
+                        HeightRenew(tempf.getRightChild());
+                    } else {
+                        HeightRenew(tempf); //看看要不要旋转
+                    }
                 } else if ((temp.getLeftChild() != null) && (temp.getRightChild() == null)) {
-                    deleteNodeTo(temp, temp.getLeftChild());
+                    // 只有左儿子
+                    deleteNodeTo(temp, temp.getLeftChild());    //这一步把temp先变成他的左儿子！！！出错应该在这一步
                     HeightRenew(temp.getLeftChild());
                 } else if ((temp.getLeftChild() == null) && (temp.getRightChild() != null)) {
                     deleteNodeTo(temp, temp.getRightChild());
