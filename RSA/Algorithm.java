@@ -8,7 +8,8 @@ import java.util.Random;
 
 public class Algorithm {
 	
-	private static final BigInteger maxInt = new BigInteger("10000000000000"); 
+	private static final int maxBitLength = 100;
+	private static final int certainty = 1000;
 	private static BigInteger plaintext;
 	private static BigInteger ciphertext;
 	private static BigInteger backtext;
@@ -29,20 +30,15 @@ public class Algorithm {
 	}
 	
 	private static BigInteger getRandomBigInteger(BigInteger upperBound) {
-	    Random rand = new Random();
 	    BigInteger result;
 	    do {
-	    	result = new BigInteger(upperBound.bitLength(), rand);
+	    	result = new BigInteger(upperBound.bitLength(), new Random());
 	    } while (result.compareTo(upperBound) >= 0);
 	    return result;
 	}
 	
 	private static BigInteger getPrime() {
-		BigInteger prime;
-		do {
-			prime = getRandomBigInteger(maxInt);
-		} while ( !prime.isProbablePrime(1000) );
-		return prime;
+		return new BigInteger(maxBitLength, certainty, new Random());
 	}
 	
 	private static BigInteger getE(BigInteger fei) {
@@ -61,14 +57,10 @@ public class Algorithm {
 		return C.modPow(d, n);
 	}
 	
-	public static void main(String args[]) {
-		System.out.print("Please input a number (smaller than " + maxInt + "): ");
+	public static void main(String args[]) throws IOException {
+		System.out.print("Please input a number (max bit length " + maxBitLength + "): ");
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		try {
-			plaintext = new BigInteger(in.readLine());
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		plaintext = new BigInteger(in.readLine());
 		p = getPrime();
 		q = getPrime();
 		n = p.multiply(q);
